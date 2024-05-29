@@ -1,0 +1,9 @@
+nltk
+PyPDF2
+chromadb
+langchain
+llama_index
+SpeechRecognition
+google-generativeai
+google-api-python-client
+langchain-google-genai
