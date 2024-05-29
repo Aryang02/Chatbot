@@ -1,16 +1,22 @@
 import os
 import sys
+import json
+import base64
 import argparse
 from logger import logging
 from exception import CustomException
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 
+encoded_credentials = os.getenv("GOOGLE_DESKTOP_CREDENTIALS")
+
+decoded_credentials_json = base64.b64decode(encoded_credentials).decode("utf-8")
+
 def getdrive(folderid:str):
     SCOPES = ["https://www.googleapis.com/auth/drive.readonly"]
-    credentials_file = "desktop_credentials.json"
+    credentials_info = json.loads(decoded_credentials_json)
     app_flow = InstalledAppFlow.from_client_secrets_file(
-      credentials_file, scopes=SCOPES
+      credentials_info, scopes=SCOPES
   )
     credentials = app_flow.run_local_server(port = 0)
     drive_service = build("drive", "v3", credentials=credentials)

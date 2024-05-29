@@ -1,12 +1,18 @@
+import os
 import sys
 import subprocess
 import streamlit as st
 from logger import logging
+from dotenv import load_dotenv
 from speech_to_text import voice_rec
 from processdata import create_index
 from exception import CustomException
 
-path = r"C:\Users\aryan\OneDrive\Desktop\RAG_Chatbot\.venv\Scripts\python.exe"
+load_dotenv()
+
+apikey = os.getenv("GOOGLE_API_KEY")
+
+path = os.getenv("PATH_TO_PYTHON_SCRIPT")
 
 def output(user_question, res):
     if "chat_history" not in st.session_state:

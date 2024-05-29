@@ -2,7 +2,6 @@ import os
 import sys
 import argparse
 import chromadb
-from apikey import apikey
 from logger import logging
 from exception import CustomException
 from langchain.prompts import ChatPromptTemplate
@@ -11,13 +10,13 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 import chromadb.utils.embedding_functions as embedding_functions
 from langchain.chains.conversation.memory import ConversationBufferMemory
 
-os.environ["GOOGLE_API_KEY"] = apikey
+apikey = os.getenv("GOOGLE_API_KEY")
 llmmodel = ChatGoogleGenerativeAI(
     model="gemini-pro", temperature=0.6, convert_system_message_to_human=True
 )
 google_ef = embedding_functions.GoogleGenerativeAiEmbeddingFunction(api_key=apikey)
 db = chromadb.PersistentClient(path="./chroma_db")
-chroma_collection = db.get_or_create_collection("Testing", embedding_function=google_ef)
+chroma_collection = db.get_or_create_collection("quickstart", embedding_function=google_ef)
 logging.info("Chroma client created")
 chat_history = []
 

@@ -1,8 +1,8 @@
 import re
+import os
 import sys
 import nltk
 import chromadb
-from apikey import apikey
 from logger import logging
 from nltk.corpus import stopwords
 from exception import CustomException
@@ -17,14 +17,14 @@ nltk.download("stopwords")
 nltk.download("wordnet")
 
 logging.info("In data collection")
+apikey = os.getenv("GOOGLE_API_KEY")
 
 stop_words = set(stopwords.words('english'))
 lemmatizer = WordNetLemmatizer()
 db = chromadb.PersistentClient(path="./chroma_db")
 google_ef = embedding_functions.GoogleGenerativeAiEmbeddingFunction(api_key=apikey)
-collection = db.get_or_create_collection("Testing", embedding_function=google_ef)
+collection = db.get_or_create_collection("quickstart", embedding_function=google_ef)
 llmmodel = ChatGoogleGenerativeAI(model='gemini-pro', temperature=0.6, google_api_key=apikey)
-
 
 def store_pdfs(pdf_docs):
   for files in pdf_docs:
@@ -33,8 +33,7 @@ def store_pdfs(pdf_docs):
 
 def process_and_transform(text):
     text = "".join(re.findall(r".*", text, re.DOTALL))
-    with open("processed_text.txt", "w", encoding='utf-8') as f:
-        f.write("".join(text))
+    
     text = text.lower()
 
     words = word_tokenize(text)
@@ -66,4 +65,3 @@ def create_index(pdf_docs=None):
     except Exception as e:
         logging.info("Error in data collection")
         raise CustomException(e, sys)
-
