@@ -28,5 +28,5 @@ def output_text(text):
 
 def voice_rec():
     text = record_text()
-    output_text(text)
+    logging.info("Voice Query Recorded")
     return text

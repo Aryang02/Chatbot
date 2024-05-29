@@ -14,12 +14,11 @@ apikey = os.getenv("GOOGLE_API_KEY")
 
 path = os.getenv("PATH_TO_PYTHON_SCRIPT")
 
-def output(user_question, res):
+def output(_role, textstr):
     if "chat_history" not in st.session_state:
         st.session_state["chat_history"] = []
 
-    st.session_state["chat_history"].append(("You:", user_question))
-    st.session_state["chat_history"].append(("Bot:", res))
+    st.session_state["chat_history"].append((_role, textstr))
 
     for role, text in st.session_state["chat_history"]:
         st.write(f"{role} {text}")
@@ -33,11 +32,13 @@ if __name__ == "__main__":
   voice_input = st.button(label="Voice Input")
   if voice_input:
       user_question = voice_rec()
+      output("You:", user_question)
       res = subprocess.run([path, "model.py", "--prompt", user_question], capture_output = True, text=True)
-      output(user_question, res.stdout)
+      output("RAG-Bot:", res.stdout)
   if user_question:
+      output("You:", user_question)
       res = subprocess.run([path, "model.py", "--prompt", user_question], capture_output = True, text=True)
-      output(user_question, res.stdout)
+      output("RAG-Bot:", res.stdout)
   
   with st.sidebar:
     st.title("Menu:")
